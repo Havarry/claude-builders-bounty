@@ -85,32 +85,23 @@ tmp_dir="$(mktemp -d)"
 trap 'rm -rf "$tmp_dir"' EXIT
 
 breaking_file="$tmp_dir/breaking.md"
-features_file="$tmp_dir/features.md"
-fixes_file="$tmp_dir/fixes.md"
-docs_file="$tmp_dir/docs.md"
-performance_file="$tmp_dir/performance.md"
-refactor_file="$tmp_dir/refactor.md"
-tests_file="$tmp_dir/tests.md"
-chores_file="$tmp_dir/chores.md"
+added_file="$tmp_dir/added.md"
+fixed_file="$tmp_dir/fixed.md"
+changed_file="$tmp_dir/changed.md"
+removed_file="$tmp_dir/removed.md"
 other_file="$tmp_dir/other.md"
 : >"$breaking_file"
-: >"$features_file"
-: >"$fixes_file"
-: >"$docs_file"
-: >"$performance_file"
-: >"$refactor_file"
-: >"$tests_file"
-: >"$chores_file"
+: >"$added_file"
+: >"$fixed_file"
+: >"$changed_file"
+: >"$removed_file"
 : >"$other_file"
 
 breaking_regex='^[a-zA-Z]+(\([^)]+\))?!:'
 feature_regex='^feat(\([^)]+\))?:'
 fix_regex='^fix(\([^)]+\))?:'
-docs_regex='^docs?(\([^)]+\))?:'
-perf_regex='^perf(\([^)]+\))?:'
-refactor_regex='^refactor(\([^)]+\))?:'
-tests_regex='^test(s)?(\([^)]+\))?:'
-maintenance_regex='^(chore|ci|build|style)(\([^)]+\))?:'
+removed_regex='^(remove|delete|drop)(\([^)]+\))?:'
+changed_regex='^(change|changed|docs?|perf|refactor|test(s)?|chore|ci|build|style)(\([^)]+\))?:'
 
 format_entry() {
   local hash="$1"
@@ -149,20 +140,14 @@ while IFS=$'\037' read -r hash date subject author; do
 
   if [[ "$subject" =~ BREAKING[[:space:]]CHANGE || "$subject" =~ $breaking_regex || "$subject" =~ [Bb]reaking ]]; then
     append_entry "$breaking_file" "$hash" "$date" "$subject" "$author"
+  elif [[ "$subject" =~ $removed_regex || "$subject" =~ [Rr]emove || "$subject" =~ [Dd]elete ]]; then
+    append_entry "$removed_file" "$hash" "$date" "$subject" "$author"
   elif [[ "$subject" =~ $feature_regex ]]; then
-    append_entry "$features_file" "$hash" "$date" "$subject" "$author"
+    append_entry "$added_file" "$hash" "$date" "$subject" "$author"
   elif [[ "$subject" =~ $fix_regex ]]; then
-    append_entry "$fixes_file" "$hash" "$date" "$subject" "$author"
-  elif [[ "$subject" =~ $docs_regex ]]; then
-    append_entry "$docs_file" "$hash" "$date" "$subject" "$author"
-  elif [[ "$subject" =~ $perf_regex ]]; then
-    append_entry "$performance_file" "$hash" "$date" "$subject" "$author"
-  elif [[ "$subject" =~ $refactor_regex ]]; then
-    append_entry "$refactor_file" "$hash" "$date" "$subject" "$author"
-  elif [[ "$subject" =~ $tests_regex ]]; then
-    append_entry "$tests_file" "$hash" "$date" "$subject" "$author"
-  elif [[ "$subject" =~ $maintenance_regex ]]; then
-    append_entry "$chores_file" "$hash" "$date" "$subject" "$author"
+    append_entry "$fixed_file" "$hash" "$date" "$subject" "$author"
+  elif [[ "$subject" =~ $changed_regex ]]; then
+    append_entry "$changed_file" "$hash" "$date" "$subject" "$author"
   else
     append_entry "$other_file" "$hash" "$date" "$subject" "$author"
   fi
@@ -193,13 +178,10 @@ if [[ "$commit_count" -eq 0 ]]; then
   printf '\nNo changes found.\n' >>"$output_file"
 else
   write_section "Breaking Changes" "$breaking_file"
-  write_section "Features" "$features_file"
-  write_section "Fixes" "$fixes_file"
-  write_section "Documentation" "$docs_file"
-  write_section "Performance" "$performance_file"
-  write_section "Refactoring" "$refactor_file"
-  write_section "Tests" "$tests_file"
-  write_section "Maintenance" "$chores_file"
+  write_section "Added" "$added_file"
+  write_section "Fixed" "$fixed_file"
+  write_section "Changed" "$changed_file"
+  write_section "Removed" "$removed_file"
   write_section "Other Changes" "$other_file"
 fi
 
