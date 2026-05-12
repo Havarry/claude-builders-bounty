@@ -66,7 +66,7 @@ By default it writes `CHANGELOG.md` from the latest git tag to `HEAD`. If the re
 scripts/generate-changelog.sh --since v1.2.0 --output RELEASE_NOTES.md
 ```
 
-The generated changelog groups conventional commits into features, fixes, documentation, tests, maintenance, and other changes. GitHub remotes are detected automatically so commit hashes and tag comparisons are linked in Markdown output.
+The generated changelog groups conventional commits into `Added`, `Fixed`, `Changed`, `Removed`, and other changes. GitHub remotes are detected automatically so commit hashes and tag comparisons are linked in Markdown output.
 
 The Claude Code skill lives at [`skills/generate-changelog/SKILL.md`](skills/generate-changelog/SKILL.md).
 
