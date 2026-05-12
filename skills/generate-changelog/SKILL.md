@@ -34,13 +34,10 @@ Use this skill when the user asks to create release notes or a changelog from a 
 The script groups commits into:
 
 - Breaking Changes
-- Features
-- Fixes
-- Documentation
-- Performance
-- Refactoring
-- Tests
-- Maintenance
+- Added
+- Fixed
+- Changed
+- Removed
 - Other Changes
 
 When `remote.origin.url` points to GitHub, commit hashes and compare links are rendered as Markdown links.
