@@ -50,39 +50,4 @@ You're in the right place.
 
 ---
 
-## Included Builder Skills
-
-### Generate a changelog from git history
-
-This repository includes a small Claude Code skill and bash utility for generating structured release notes from commit history:
-
-```bash
-scripts/generate-changelog.sh
-```
-
-By default it writes `CHANGELOG.md` from the latest git tag to `HEAD`. If the repository has no tags, it uses all history. You can also choose the starting point or output path:
-
-```bash
-scripts/generate-changelog.sh --since v1.2.0 --output RELEASE_NOTES.md
-```
-
-The generated changelog groups conventional commits into `Added`, `Fixed`, `Changed`, `Removed`, and other changes. GitHub remotes are detected automatically so commit hashes and tag comparisons are linked in Markdown output.
-
-The Claude Code skill lives at [`skills/generate-changelog/SKILL.md`](skills/generate-changelog/SKILL.md).
-
-### Block destructive Bash commands
-
-This repository includes a Claude Code `PreToolUse` hook that prevents common destructive Bash commands from running:
-
-```bash
-mkdir -p ~/.claude/hooks && cp hooks/block-destructive-bash/block_destructive_bash.py ~/.claude/hooks/
-python3 ~/.claude/hooks/block_destructive_bash.py --install
-```
-
-The hook blocks `rm -rf`, `DROP TABLE`, `TRUNCATE`, `git push --force`, and `DELETE FROM` statements without a `WHERE` clause. Each blocked attempt is logged to `~/.claude/hooks/blocked.log` with a timestamp, project path, and attempted command.
-
-The hook documentation lives at [`hooks/block-destructive-bash/README.md`](hooks/block-destructive-bash/README.md).
-
----
-
 *Started by the Claude builder community · March 2026 · MIT License*
